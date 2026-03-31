@@ -1,0 +1,7 @@
+[
+  { "id": 1, "text": "This is a post 1" },
+  { "id": 2, "replyTo": 1, "text": "This is a comment, child to post 1" },
+  { "id": 3, "replyTo": 2, "text": "This is a comment, child to comment 2" },
+  { "id": 4, "replyTo": 1, "text": "This is a comment, child to post 1" },
+  { "id": 5, "text": "This is a post 2" }
+]
