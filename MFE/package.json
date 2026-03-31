@@ -1,0 +1,16 @@
+{
+  "name": "ecommerce-mfe",
+  "private": true,
+  "scripts": {
+    "install:all": "npm i --prefix shell && npm i --prefix product && npm i --prefix cart",
+    "build:remotes": "npm run build --prefix product && npm run build --prefix cart",
+    "start:product": "npm run preview --prefix product",
+    "start:cart": "npm run preview --prefix cart",
+    "start:shell": "npm run dev --prefix shell",
+    "start": "npm run build:remotes && concurrently \"npm run start:product\" \"npm run start:cart\" \"npm run start:shell\"",
+    "dev": "concurrently \"npm run start:product\" \"npm run start:cart\" \"npm run start:shell\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

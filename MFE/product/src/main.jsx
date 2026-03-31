@@ -1,0 +1,5 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import ProductApp from './ProductApp';
+
+ReactDOM.createRoot(document.getElementById('root')).render(<ProductApp />);
