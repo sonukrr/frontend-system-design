@@ -1,5 +1,6 @@
 
 import './App.css';
+import NestedCommentsAdvanced from './NestedCommentsAdvanced';
 import  NestedCommentsRender from './NestedCommentsRender';
 
 function App() {
@@ -7,7 +8,8 @@ function App() {
 
   return (
    <>
-   <NestedCommentsRender />
+   {/* <NestedCommentsRender /> */}
+   <NestedCommentsAdvanced />
    </>
   )
 }
