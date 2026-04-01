@@ -1,7 +1,7 @@
-import { useReducer, useState } from "react";
+import { useReducer, useState, memo } from "react";
 import { CommentsReducer, initialState } from "./CommentsReducer";
 
-const Comment = ({ commentId, comments, dispatch, depth = 0 }) => {
+const Comment = memo(({ commentId, comments, dispatch, depth = 0 }) => {
   const comment = comments[commentId];
   const [replyText, setReplyText] = useState("");
   const [editText, setEditText] = useState(comment?.text || "");
@@ -286,7 +286,9 @@ const Comment = ({ commentId, comments, dispatch, depth = 0 }) => {
       )}
     </div>
   );
-};
+});
+
+Comment.displayName = 'Comment';
 
 const NestedCommentsAdvanced = () => {
   const [input, setInput] = useState("");
