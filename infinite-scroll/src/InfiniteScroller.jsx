@@ -27,7 +27,7 @@ const InfiniteScroller = () => {
             
 
             const fetchProducts = async () => {
-                const response = await fetch(`https://api.escuelajs.co/api/v1/products?offset=${offset}&limit=5&title=${searchInput}`);
+                const response = await fetch(`https://api.escuelajs.co/api/v1/products?offset=${offset}&limit=10&title=${searchInput}`);
                 const data = await response.json();
 
                 return data.map(({ id, title }) => ({
@@ -82,11 +82,11 @@ const InfiniteScroller = () => {
                 />
             </div>
 
-            <div style={{ height: 80, overflow: "scroll" , border: "2px solid grey", textAlign: "left"}} onScroll={e => scrollHandler(e)}>
+            <div style={{ height: 150, overflow: "scroll" , border: "2px solid grey", textAlign: "left"}} onScroll={e => scrollHandler(e)}>
                 {products.length > 0 &&
                     products.map(product => {
                         return (
-                            <div key={product.id}>
+                            <div key={product.id} style={{fontSize: 18, padding: 2}}>
                                 {product.title}
                                 <div />
                             </div>
