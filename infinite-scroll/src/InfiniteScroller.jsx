@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const InfiniteScroller = () => {
 
@@ -7,6 +7,11 @@ const InfiniteScroller = () => {
 
     const [products, setProducts] = useState([]);
     const [offset, setOffset] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
+    const [hasMoreData, setHasMoreData] = useState(true);
+
+    // We use useRef here because we need to persist the throttle timer across renders without causing re-renders.
+    const throttleTimer = useRef(null);
 
 
     useEffect(() => {
@@ -23,51 +28,62 @@ const InfiniteScroller = () => {
 
 
     useEffect(() => {
+        if (isLoading || !hasMoreData) return; // Prevent duplicate requests and stop when no more data
         
-            
-
-            const fetchProducts = async () => {
+        const fetchProducts = async () => {
+            setIsLoading(true);
+            try {
                 const response = await fetch(`https://api.escuelajs.co/api/v1/products?offset=${offset}&limit=10&title=${searchInput}`);
                 const data = await response.json();
 
-                return data.map(({ id, title }) => ({
+                const products = data.map(({ id, title }) => ({
                     id,
                     title
                 }));
-            }
 
-            fetchProducts().then(res => {
+                // Check if we have more data
+                const hasMore = products.length > 0;
+                setHasMoreData(hasMore);
+
                 if (offset === 0) {
                     // New search - replace products
-                    setProducts(res);
+                    setProducts(products);
                 } else {
                     // Scrolling - append products
-                    setProducts([
-                        ...products,
-                        ...res
-                    ]);
+                    setProducts(prev => [...prev, ...products]);
                 }
-            });
+            } catch (error) {
+                console.error('Failed to fetch products:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
 
-    }, [searchInput, offset])
+        fetchProducts();
+
+    }, [searchInput, offset, isLoading, hasMoreData])
 
 
     const searchHanler = (value) => {
+        setOffset(0);
+        setHasMoreData(true); // Reset end-of-data state on new search
         setDebouncedInput(value);
     }
 
     const scrollHandler = (event) => {
-        console.log(event);
-        
-
-        if(event.target.scrollHeight - event.target.scrollTop <= event.target.clientHeight + 5){
-            setOffset(offset + 1);
+        if (throttleTimer.current || isLoading || !hasMoreData) {
+            return;
         }
 
+        // wait then executes - trailing-edge throttling
+        // we also have leading edge throttling - execute first, then wait
+        throttleTimer.current = setTimeout(() => {
+            throttleTimer.current = null;
 
-
-        
-        
+            if(event.target.scrollHeight - event.target.scrollTop <= event.target.clientHeight + 5){
+                setOffset(prev => prev + 1);
+            }
+        }, 200);
     }
 
     return (
@@ -94,6 +110,17 @@ const InfiniteScroller = () => {
                     })
                 }
 
+                {isLoading && (
+                    <div style={{ textAlign: "center", padding: 10, color: "#666" }}>
+                        Loading...
+                    </div>
+                )}
+
+                {!hasMoreData && products.length > 0 && (
+                    <div style={{ textAlign: "center", padding: 10, color: "#999", fontStyle: "italic" }}>
+                        No more products to load
+                    </div>
+                )}
             </div>
 
         </div>
