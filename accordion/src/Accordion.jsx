@@ -25,7 +25,7 @@ const DATA = [
 const Accordion = () => {
 
     const [accordions, setAccordions] = useState(DATA);
-    const [openIndex, setOpenIndex] = useState(null);
+    const [openIndex, setOpenIndex] = useState([]);
 
 
     return (
@@ -39,8 +39,8 @@ const Accordion = () => {
                         title={accordion.title}
                         content={accordion.content}
                         index={index}
-                        open={index == openIndex}
-                        setIsOpen={idx => idx == openIndex ? setOpenIndex(null) : setOpenIndex(idx)}
+                        open={openIndex.includes(index)}
+                        setIsOpen={idx => openIndex.includes(idx) ? setOpenIndex(openIndex.filter(el => el != idx)) : setOpenIndex([...openIndex, idx])}
                     />
                 )
             }
