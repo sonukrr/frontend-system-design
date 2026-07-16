@@ -10,7 +10,7 @@ const SearchInput = () => {
     const [cache, setCache] = useState({});
 
     useEffect(() => {
-        // denounce input to rate limit the number of api calls
+        // debounce input to rate limit the number of api calls
         const timer = setTimeout(() => {
             setSearchText(debounceInput);
         }, 200);
