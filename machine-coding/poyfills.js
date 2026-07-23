@@ -1,3 +1,5 @@
+const { useEffect } = require("react");
+
 // polyfill for map
 const arr = [10, 20, 40, 50];
 
@@ -49,4 +51,23 @@ Function.prototype.myApply = function (context, args = []){
 
     return res;
 
+}
+
+// componentDidUpdate()
+
+// skip the intial render and run the callback for every update of the deps
+
+function componentDidUpdate(callback, deps){
+
+    let isComponentMount = useRef(false);
+
+    useEffect(() => {
+        // execute post intital mount is done
+        if(isComponentMount.current){
+            callback();
+        }else{
+            // skip first render
+            isComponentMount.current = true;
+        }
+    }, [deps])
 }
