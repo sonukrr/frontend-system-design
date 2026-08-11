@@ -1,40 +1,59 @@
 import React from "react";
-import { useState, useEffect } from "react";
 
-
-
-const PaginationOffset = ({ page, total, pageSize, setPage }) => {
-  const [pages, setPages] = useState([]);
-
-  useEffect(() => {
-    setPages(getAllPages());
-  }, []);
-
-  const getAllPages = () => {
-    const n = Math.ceil(total / pageSize);
-    const res = [];
-    for (let i = 1; i <= n; i++) {
-      res.push(i);
-    }
-
-    return res;
-  };
+const PaginationOffset = ({ page, loading, total, pageSize, setPage }) => {
+  const pageCount = Math.ceil(total / pageSize);
+  const pages = Array.from({ length: pageCount }, (_, i) => i + 1);
 
   return (
-    <div className="flex justify-end w-full">
-    {
-        page > 1 && <button onClick={() => setPage(page - 1)}> &lt; Prev </button>
-    }
-      
-      {pages.map((curr, idx) => {
-        return <button onClick={() => setPage(curr)} 
-        className={idx + 1 == page ? 'border-2 bg-amber-700 p-1 m-1 rounded-sm' : 'border-2 p-1 m-1 rounded-sm'} key={curr}>{curr}</button>;
+    <nav aria-label="Pagination" className="flex justify-end w-full">
+      <span className="sr-only" role="status" aria-live="polite">
+        Page {page} of {pageCount}
+      </span>
+
+      {page > 1 && (
+        <button
+            disabled={loading}
+          onClick={() => setPage(page - 1)}
+          aria-label="Go to previous page"
+          className="focus-visible:outline-2 focus-visible:outline-amber-700"
+        >
+          {" "}
+          &lt; Prev{" "}
+        </button>
+      )}
+
+      {pages.map((curr) => {
+        return (
+          <button
+            disabled={loading}
+            onClick={() => setPage(curr)}
+            aria-label={`Go to page ${curr}`}
+            aria-current={curr == page ? "page" : undefined}
+            className={
+              (curr == page
+                ? "border-2 bg-amber-700 p-1 m-1 rounded-sm"
+                : "border-2 p-1 m-1 rounded-sm") +
+              " focus-visible:outline-2 focus-visible:outline-amber-700"
+            }
+            key={curr}
+          >
+            {curr}
+          </button>
+        );
       })}
-      {
-        page < Math.ceil(total / pageSize) && <button onClick={() => setPage(page + 1)}> Next &gt;</button>
-      }
-      
-    </div>
+
+      {page < pageCount && (
+        <button
+        disabled={loading}
+          onClick={() => setPage(page + 1)}
+          aria-label="Go to next page"
+          className="focus-visible:outline-2 focus-visible:outline-amber-700"
+        >
+          {" "}
+          Next &gt;
+        </button>
+      )}
+    </nav>
   );
 };
 
